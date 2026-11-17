@@ -1,89 +1,18 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
-}
-
-$foods = [
-    [
-        "id" => 1,
-        "name" => "Chicken Burger",
-        "description" => "Delicious chicken burger with fresh vegetables.",
-        "price" => 850,
-        "image" => "assets/images/burger.jpg"
-    ],
-    [
-        "id" => 2,
-        "name" => "Chicken Pizza",
-        "description" => "Fresh pizza topped with cheese and chicken.",
-        "price" => 1500,
-        "image" => "assets/images/pizza.jpg"
-    ],
-    [
-        "id" => 3,
-        "name" => "Fried Rice",
-        "description" => "Tasty fried rice with chicken and vegetables.",
-        "price" => 950,
-        "image" => "assets/images/fried-rice.jpg"
-    ],
-    [
-        "id" => 4,
-        "name" => "French Fries",
-        "description" => "Crispy and delicious golden french fries.",
-        "price" => 450,
-        "image" => "assets/images/fries.jpg"
-    ],
-    [
-        "id" => 5,
-        "name" => "Chicken Kottu",
-        "description" => "Traditional Sri Lankan chicken kottu.",
-        "price" => 1000,
-        "image" => "assets/images/kottu.jpg"
-    ],
-    [
-        "id" => 6,
-        "name" => "Sandwich",
-        "description" => "Fresh sandwich with chicken and vegetables.",
-        "price" => 600,
-        "image" => "assets/images/sandwich.jpg"
-    ]
-];
-
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["add_to_cart"])) {
-    $foodId = (int) $_POST["food_id"];
-
-    foreach ($foods as $food) {
-        if ($food["id"] === $foodId) {
-            if (isset($_SESSION['cart'][$foodId])) {
-                $_SESSION['cart'][$foodId]['quantity']++;
-            } else {
-                $_SESSION['cart'][$foodId] = [
-                    "id" => $food["id"],
-                    "name" => $food["name"],
-                    "price" => $food["price"],
-                    "image" => $food["image"],
-                    "quantity" => 1
-                ];
-            }
-
-            break;
-        }
-    }
-
-    header("Location: index.php#menu");
-    exit;
-}
-
 $cartCount = 0;
 
-foreach ($_SESSION['cart'] as $item) {
-    $cartCount += $item['quantity'];
+if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+    foreach ($_SESSION['cart'] as $item) {
+        $cartCount += (int)($item['quantity'] ?? 0);
+    }
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -95,174 +24,382 @@ foreach ($_SESSION['cart'] as $item) {
 
 <body>
 
-<!-- Navigation -->
-<header class="header">
-    <div class="container">
-        <h1 class="logo">Foodie<span>.</span></h1>
+    <!-- Navigation Bar -->
+    <header class="header">
 
-        <nav>
-            <a href="index.php">Home</a>
-            <a href="#menu">Menu</a>
-            <a href="#offers">Offers</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-            <a href="cart.php">
-                Cart (<?php echo $cartCount; ?>)
+        <div class="container navbar">
+
+            <a href="index.php" class="logo">
+                Foodie<span>.</span>
             </a>
-        </nav>
-    </div>
-</header>
 
-<!-- Hero Section -->
-<section class="hero">
-    <div class="container">
-        <div class="hero-content">
-            <h2>Delicious Food Delivered To Your Door</h2>
+            <nav class="nav-links">
+                <a href="index.php" class="active">Home</a>
+                <a href="menu.php">Menu</a>
+                <a href="#about">About</a>
+                <a href="#offers">Offers</a>
+                <a href="#contact">Contact</a>
+            </nav>
 
-            <p>
-                Enjoy your favourite meals prepared fresh
-                and delivered quickly to your home.
-            </p>
+            <div class="nav-buttons">
+                <a href="cart.php" class="cart-btn">
+                    <span>🛒</span>
+                    Cart
+                    <span class="cart-count">
+                        <?php echo $cartCount; ?>
+                    </span>
+                </a>
+            </div>
 
-            <a href="#menu" class="btn">Order Now</a>
         </div>
-    </div>
-</section>
 
-<!-- Food Menu -->
-<section class="menu-section" id="menu">
+    </header>
 
-    <div class="container">
 
-        <h2 class="section-title">Our Popular Foods</h2>
+    <!-- Hero Section -->
+    <section class="hero">
 
-        <p class="section-description">
-            Choose your favourite food from our delicious menu.
-        </p>
+        <div class="container hero-content">
 
-        <div class="food-container">
+            <div class="hero-text">
 
-            <?php foreach ($foods as $food): ?>
+                <span class="small-heading">
+                    WELCOME TO FOODIE
+                </span>
 
-                <div class="food-card">
+                <h1>
+                    Delicious Food,
+                    <span>Delivered Fast.</span>
+                </h1>
 
-                    <img
-                        src="<?php echo htmlspecialchars($food['image']); ?>"
-                        alt="<?php echo htmlspecialchars($food['name']); ?>"
-                        onerror="this.src='assets/images/food-placeholder.jpg'"
-                    >
+                <p>
+                    Discover delicious meals from your favourite
+                    restaurants. Order online and enjoy fresh food
+                    delivered directly to your doorstep.
+                </p>
 
-                    <div class="food-details">
+                <div class="hero-buttons">
 
-                        <h3>
-                            <?php echo htmlspecialchars($food['name']); ?>
-                        </h3>
+                    <a href="menu.php" class="primary-btn">
+                        Order Now →
+                    </a>
 
-                        <p>
-                            <?php echo htmlspecialchars($food['description']); ?>
-                        </p>
+                    <a href="#about" class="secondary-btn">
+                        Learn More
+                    </a>
 
-                        <h4>
-                            Rs. <?php echo number_format($food['price'], 2); ?>
-                        </h4>
+                </div>
 
-                        <form method="POST" action="index.php#menu">
+                <div class="hero-info">
 
-                            <input
-                                type="hidden"
-                                name="food_id"
-                                value="<?php echo $food['id']; ?>"
-                            >
+                    <div class="info-item">
+                        <h3>100+</h3>
+                        <p>Food Items</p>
+                    </div>
 
-                            <button
-                                type="submit"
-                                name="add_to_cart"
-                                class="btn"
-                            >
-                                Add to Cart
-                            </button>
+                    <div class="info-item">
+                        <h3>50+</h3>
+                        <p>Happy Customers</p>
+                    </div>
 
-                        </form>
+                    <div class="info-item">
+                        <h3>24/7</h3>
+                        <p>Online Service</p>
+                    </div>
 
+                </div>
+
+            </div>
+
+            <div class="hero-image">
+
+                <div class="image-circle">
+                    <div class="food-emoji">🍔</div>
+                </div>
+
+                <div class="floating-card">
+                    <span>⭐</span>
+                    <div>
+                        <h4>Fresh & Delicious</h4>
+                        <p>Made with love</p>
                     </div>
                 </div>
 
-            <?php endforeach; ?>
+            </div>
 
         </div>
 
-    </div>
+    </section>
 
-</section>
 
-<!-- Offers Section -->
-<section class="offers" id="offers">
+    <!-- Features Section -->
+    <section class="features">
 
-    <div class="container">
+        <div class="container feature-container">
 
-        <h2>Special Offers</h2>
+            <div class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <h3>Fast Delivery</h3>
+                <p>Get your favourite food delivered quickly.</p>
+            </div>
 
-        <p>
-            Enjoy delicious meals at affordable prices.
-            Special discounts are available on selected items.
-        </p>
+            <div class="feature-card">
+                <div class="feature-icon">🥗</div>
+                <h3>Fresh Food</h3>
+                <p>Enjoy fresh and delicious meals every day.</p>
+            </div>
 
-        <a href="#menu" class="btn">Explore Menu</a>
+            <div class="feature-card">
+                <div class="feature-icon">💳</div>
+                <h3>Easy Payment</h3>
+                <p>Simple and convenient payment options.</p>
+            </div>
 
-    </div>
+            <div class="feature-card">
+                <div class="feature-icon">❤️</div>
+                <h3>Best Quality</h3>
+                <p>Quality food prepared for our customers.</p>
+            </div>
 
-</section>
+        </div>
 
-<!-- About Section -->
-<section class="about" id="about">
+    </section>
 
-    <div class="container">
 
-        <h2 class="section-title">About Foodie</h2>
+    <!-- Food Categories -->
+    <section class="categories section-padding">
 
-        <p>
-            Foodie is an online food delivery platform designed
-            to make ordering food simple and convenient.
-            Customers can explore food items, add products
-            to their cart and place orders online.
-        </p>
+        <div class="container">
 
-    </div>
+            <div class="section-heading">
+                <span>EXPLORE OUR FOOD</span>
+                <h2>Choose Your Favourite</h2>
+                <p>Find something delicious for every craving.</p>
+            </div>
 
-</section>
+            <div class="category-container">
 
-<!-- Contact Section -->
-<section class="contact" id="contact">
+                <a href="menu.php" class="category-card">
+                    <div class="category-icon">🍔</div>
+                    <h3>Burgers</h3>
+                    <p>Delicious burgers</p>
+                </a>
 
-    <div class="container">
+                <a href="menu.php" class="category-card">
+                    <div class="category-icon">🍕</div>
+                    <h3>Pizza</h3>
+                    <p>Cheesy and tasty</p>
+                </a>
 
-        <h2 class="section-title">Contact Us</h2>
+                <a href="menu.php" class="category-card">
+                    <div class="category-icon">🍚</div>
+                    <h3>Rice</h3>
+                    <p>Fresh rice dishes</p>
+                </a>
 
-        <p>Email: support@foodie.com</p>
+                <a href="menu.php" class="category-card">
+                    <div class="category-icon">🍗</div>
+                    <h3>Chicken</h3>
+                    <p>Favourite chicken meals</p>
+                </a>
 
-        <p>Phone: +94 77 123 4567</p>
+                <a href="menu.php" class="category-card">
+                    <div class="category-icon">🍟</div>
+                    <h3>Snacks</h3>
+                    <p>Enjoy tasty snacks</p>
+                </a>
 
-        <p>Location: Sri Lanka</p>
+            </div>
 
-    </div>
+            <div class="center-button">
+                <a href="menu.php" class="primary-btn">
+                    View Full Menu →
+                </a>
+            </div>
 
-</section>
+        </div>
 
-<!-- Footer -->
-<footer class="footer">
+    </section>
 
-    <div class="container">
 
-        <p>
-            &copy; <?php echo date("Y"); ?> Foodie.
-            All Rights Reserved.
-        </p>
+    <!-- Special Offer Section -->
+    <section class="offer-section" id="offers">
 
-    </div>
+        <div class="container offer-content">
 
-</footer>
+            <div class="offer-text">
 
-<script src="assets/js/script.js"></script>
+                <span class="offer-label">
+                    SPECIAL OFFER
+                </span>
+
+                <h2>
+                    Delicious Moments
+                    <span>Start Here!</span>
+                </h2>
+
+                <p>
+                    Explore our food collection and enjoy
+                    delicious meals at affordable prices.
+                </p>
+
+                <a href="menu.php" class="offer-btn">
+                    Explore Menu →
+                </a>
+
+            </div>
+
+            <div class="offer-emoji">
+                🍕
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- About Section -->
+    <section class="about section-padding" id="about">
+
+        <div class="container about-container">
+
+            <div class="about-image">
+                <div class="about-emoji">👨‍🍳</div>
+            </div>
+
+            <div class="about-text">
+
+                <span>ABOUT FOODIE</span>
+
+                <h2>
+                    We Make Food Ordering
+                    Simple & Enjoyable
+                </h2>
+
+                <p>
+                    Foodie is an online food delivery platform
+                    created to make food ordering easy and convenient.
+                    Customers can explore different food items,
+                    select their favourite meals and place orders online.
+                </p>
+
+                <p>
+                    Our goal is to provide a simple ordering experience
+                    with delicious food and convenient service.
+                </p>
+
+                <a href="menu.php" class="primary-btn">
+                    Discover More →
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Contact Section -->
+    <section class="contact-section section-padding" id="contact">
+
+        <div class="container">
+
+            <div class="section-heading">
+                <span>GET IN TOUCH</span>
+                <h2>Contact Us</h2>
+                <p>We are happy to hear from you.</p>
+            </div>
+
+            <div class="contact-container">
+
+                <div class="contact-card">
+                    <div>📞</div>
+                    <h3>Phone</h3>
+                    <p>+94 77 123 4567</p>
+                </div>
+
+                <div class="contact-card">
+                    <div>📧</div>
+                    <h3>Email</h3>
+                    <p>support@foodie.com</p>
+                </div>
+
+                <div class="contact-card">
+                    <div>📍</div>
+                    <h3>Location</h3>
+                    <p>Sri Lanka</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+
+        <div class="container footer-container">
+
+            <div class="footer-about">
+
+                <a href="index.php" class="footer-logo">
+                    Foodie<span>.</span>
+                </a>
+
+                <p>
+                    Delicious food delivered to your doorstep.
+                    Enjoy your favourite meals with Foodie.
+                </p>
+
+            </div>
+
+            <div class="footer-links">
+
+                <h3>Quick Links</h3>
+
+                <a href="index.php">Home</a>
+                <a href="menu.php">Menu</a>
+                <a href="#about">About</a>
+                <a href="#offers">Offers</a>
+                <a href="#contact">Contact</a>
+
+            </div>
+
+            <div class="footer-links">
+
+                <h3>Our Services</h3>
+
+                <a href="menu.php">Food Ordering</a>
+                <a href="cart.php">Shopping Cart</a>
+                <a href="checkout.php">Checkout</a>
+
+            </div>
+
+            <div class="footer-social">
+
+                <h3>Follow Us</h3>
+
+                <p>Stay connected with Foodie.</p>
+
+                <div class="social-icons">
+                    <a href="#">Facebook</a>
+                    <a href="#">Instagram</a>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="copyright">
+            <p>
+                &copy; <?php echo date("Y"); ?>
+                Foodie. All Rights Reserved.
+            </p>
+        </div>
+
+    </footer>
 
 </body>
 </html>
