@@ -94,6 +94,13 @@ foreach ($cart as $item) {
             Foodie<span>.</span>
         </a>
 
+          <nav class="nav-links">
+            <a href="index.php">Home</a>
+            <a href="menu.php">Menu</a>
+            <a href="index.php#about">About</a>
+            <a href="index.php#contact">Contact</a>
+        </nav>
+
         <a href="cart.php" class="cart-link">
             🛒 Cart (<?php echo $cartCount; ?>)
         </a>
