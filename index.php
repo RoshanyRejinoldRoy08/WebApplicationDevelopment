@@ -337,7 +337,7 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
     </section>
 
 
-    <!-- Footer -->
+
     <footer class="footer">
 
         <div class="container footer-container">
