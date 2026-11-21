@@ -8,6 +8,7 @@ body {
     font-family: Arial, sans-serif;
     background: #f7f7f7;
     color: #333;
+    line-height: 1.5;
 }
 
 .container {
@@ -16,6 +17,7 @@ body {
     margin: auto;
 }
 
+/* Header used by checkout pages */
 .header {
     background: #ff6b35;
     padding: 20px 0;
@@ -39,7 +41,52 @@ body {
     font-weight: bold;
 }
 
+/* Header used by includes/header.php */
+.site-header {
+    width: 100%;
+    background: #ff6b35;
+    color: #fff;
+    padding: 20px 0;
+}
+
+.header-container {
+    width: 90%;
+    max-width: 1150px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.site-header .logo {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.navigation a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navigation a:hover,
+.header nav a:hover {
+    text-decoration: underline;
+}
+
 .checkout-container {
+    width: 90%;
+    max-width: 1150px;
+    margin: 0 auto;
     padding-top: 40px;
     padding-bottom: 50px;
 }
@@ -95,6 +142,14 @@ body {
     resize: vertical;
 }
 
+.checkout-form input:focus,
+.checkout-form textarea:focus,
+.checkout-form select:focus {
+    outline: none;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.12);
+}
+
 .place-order-btn,
 .home-btn {
     display: inline-block;
@@ -109,6 +164,7 @@ body {
     text-align: center;
     text-decoration: none;
     cursor: pointer;
+    transition: background 0.2s ease;
 }
 
 .place-order-btn:hover,
@@ -157,6 +213,7 @@ body {
     margin-bottom: 20px;
 }
 
+/* Order success page */
 .success-container {
     width: 90%;
     max-width: 650px;
@@ -197,8 +254,15 @@ body {
 }
 
 .order-details p {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
     margin-bottom: 12px;
     overflow-wrap: anywhere;
+}
+
+.order-details p:last-child {
+    margin-bottom: 0;
 }
 
 .success-card h3 {
@@ -211,8 +275,61 @@ body {
     border-bottom: 1px solid #eee;
 }
 
+.success-item:last-child {
+    margin-bottom: 0;
+}
+
 .home-btn {
     margin-top: 20px;
+}
+
+/* Footer used by includes/footer.php */
+.site-footer {
+    background: #202020;
+    color: #fff;
+    padding: 40px 5% 15px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    width: 100%;
+    max-width: 1150px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 30px;
+    padding-bottom: 30px;
+}
+
+.site-footer h2,
+.site-footer h3 {
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.site-footer p {
+    color: #ccc;
+    margin: 8px 0;
+}
+
+.footer-links a {
+    display: block;
+    width: fit-content;
+    color: #ccc;
+    text-decoration: none;
+    margin: 8px 0;
+}
+
+.footer-links a:hover {
+    color: #ff6b35;
+}
+
+.footer-bottom {
+    max-width: 1150px;
+    margin: 0 auto;
+    text-align: center;
+    border-top: 1px solid #555;
+    padding-top: 15px;
 }
 
 @media (max-width: 768px) {
@@ -220,12 +337,16 @@ body {
         grid-template-columns: 1fr;
     }
 
-    .header .container {
+    .header .container,
+    .header-container {
         flex-direction: column;
         gap: 15px;
     }
 
-    .header nav {
+    .header nav,
+    .navigation {
+        justify-content: center;
+        flex-wrap: wrap;
         gap: 15px;
     }
 
@@ -233,5 +354,31 @@ body {
     .order-summary,
     .success-card {
         padding: 20px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkout-container h1 {
+        font-size: 26px;
+    }
+
+    .success-container {
+        margin: 30px auto;
+    }
+
+    .order-details p,
+    .success-item {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .order-details p strong,
+    .success-item span {
+        text-align: left;
     }
 }
