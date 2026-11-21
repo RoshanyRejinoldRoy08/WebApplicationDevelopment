@@ -1,14 +1,14 @@
 <?php
 require_once 'includes/functions.php';
 
-$order = $_SESSION['last_order'] ?? null;
+$order = $_SESSION['order'] ?? null;
 
 if (!$order) {
     header('Location: index.php');
     exit;
 }
 
-unset($_SESSION['last_order']);
+unset($_SESSION['order']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
